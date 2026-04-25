@@ -6,7 +6,45 @@ description: |
 
 # Repo Scaffold Skill
 
-Produce a complete, developer-ready repository — not just source code, but everything a real project needs: architecture diagrams, README, CI/CD config, contribution guide, environment setup, and a coherent folder structure.
+Generate production-ready repositories using **Copier** and battle-tested community templates.
+
+---
+
+## Approach
+
+This skill uses **Copier** (https://github.com/copier-org/copier) as the scaffolding engine:
+
+1. **Template Updates** — Projects can receive updates when templates evolve
+2. **Battle-Tested** — Community templates are production-proven
+3. **Fast** — Seconds instead of minutes
+4. **Consistent** — Same template = same structure every time
+5. **Maintainable** — Leverage community work for core scaffolding
+
+---
+
+## Prerequisites Check
+
+Before scaffolding, verify Copier is installed:
+
+```bash
+# Check if copier exists
+which copier || pipx install copier
+
+# Verify version (need v9.14.3+)
+copier --version
+```
+
+If not installed, install it:
+```bash
+# Preferred: pipx (isolated)
+pipx install copier
+
+# Alternative: uv
+uv tool install copier
+
+# Alternative: pip
+pip install copier
+```
 
 ---
 
@@ -45,114 +83,167 @@ Do NOT ask more than 2 clarifying questions. Infer the rest and state your assum
 
 ---
 
-## Step 2 — Plan the repo structure
+## Step 2 — Select the appropriate community template
 
-Choose the right layout for the stack. Below are canonical patterns — adapt, don't copy blindly.
+Match the project type to the best community template. Use this decision tree:
 
-### Generic (language-agnostic) layout
-```
-project-name/
-├── .github/
-│   └── workflows/
-│       ├── ci.yml
-│       └── release.yml
-├── docs/
-│   ├── architecture.md
-│   └── diagrams/
-│       ├── system-overview.mermaid
-│       └── data-flow.mermaid
-├── src/                  # or lib/, app/, pkg/ — match language conventions
-├── tests/
-├── scripts/              # dev scripts (setup, seed, migrate)
-├── .env.example
-├── .gitignore
-├── CHANGELOG.md
-├── CONTRIBUTING.md
-├── LICENSE
-└── README.md
+### Python Projects
+
+**FastAPI / API Service**
+```bash
+copier copy gh:pawamoy/copier-pdm <output-dir>
+# Modern Python API with PDM, Ruff, pytest, CI/CD
+# Best for: REST APIs, microservices
 ```
 
-### Python service
-```
-project/
-├── src/project/
-│   ├── __init__.py
-│   ├── main.py
-│   ├── config.py
-│   └── routes/ or handlers/ or models/
-├── tests/
-├── pyproject.toml        # or setup.cfg, requirements files
-├── Dockerfile
-├── docker-compose.yml
-└── ... (standard above)
+**Python Library / Package**
+```bash
+copier copy gh:pawamoy/copier-poetry <output-dir>
+# Poetry-based package with full publishing setup
+# Best for: Reusable libraries, PyPI packages
 ```
 
-### Node / TypeScript
-```
-project/
-├── src/
-│   ├── index.ts
-│   └── ...
-├── tests/
-├── package.json
-├── tsconfig.json
-├── .eslintrc.json
-└── ... (standard above)
+**Django Application**
+```bash
+copier copy gh:cookiecutter/cookiecutter-django <output-dir>
+# Full Django setup with Docker, PostgreSQL, Redis
+# Best for: Web applications, admin panels
 ```
 
-### Go service
+**Data Science / ML Project**
+```bash
+copier copy gh:drivendataorg/cookiecutter-data-science <output-dir>
+# Standardized data science project structure
+# Best for: ML experiments, data analysis
 ```
-project/
-├── cmd/server/main.go
-├── internal/
-├── pkg/
-├── Makefile
-├── go.mod
-└── ...
+
+**Generic Python Project**
+```bash
+copier copy gh:cjolowicz/cookiecutter-hypermodern-python <output-dir>
+# Modern Python with Poetry, Nox, pre-commit
+# Best for: General Python projects
+```
+
+### Node / TypeScript Projects
+
+**Next.js Application**
+```bash
+npx create-next-app@latest <output-dir> --typescript --tailwind --app
+# Modern React framework with TypeScript
+# Best for: Web apps, SSR, static sites
+```
+
+**Express API**
+```bash
+copier copy gh:hagopj13/node-express-boilerplate <output-dir>
+# Production-ready Express.js REST API
+# Best for: Node.js APIs, microservices
+```
+
+**TypeScript Library**
+```bash
+copier copy gh:stegano/typescript-library-template <output-dir>
+# TypeScript library with bundling and publishing
+# Best for: NPM packages, reusable libraries
+```
+
+**React Component Library**
+```bash
+npx create-react-library <output-dir>
+# React component library with Rollup
+# Best for: UI component libraries
+```
+
+### Go Projects
+
+**Go Service / API**
+```bash
+copier copy gh:lacion/cookiecutter-golang <output-dir>
+# Go service with Makefile, Docker, CI
+# Best for: APIs, microservices
+```
+
+**Go CLI Tool**
+```bash
+copier copy gh:spf13/cobra-cli <output-dir>
+# Cobra-based CLI application
+# Best for: Command-line tools
+```
+
+### Rust Projects
+
+**Rust Binary / CLI**
+```bash
+cargo generate --git https://github.com/rust-cli/cli-template <output-dir>
+# Rust CLI with clap, error handling, testing
+# Best for: CLI tools, system utilities
+```
+
+**Rust Library**
+```bash
+cargo new --lib <output-dir>
+# Standard Rust library
+# Best for: Reusable crates
+```
+
+### Other Languages
+
+**Ruby on Rails**
+```bash
+rails new <output-dir> --api --database=postgresql
+# Rails API with PostgreSQL
+# Best for: Ruby APIs, web services
+```
+
+**Java Spring Boot**
+```bash
+curl https://start.spring.io/starter.zip \
+  -d dependencies=web,data-jpa,postgresql \
+  -d type=maven-project \
+  -o <output-dir>.zip && unzip <output-dir>.zip -d <output-dir>
+# Spring Boot with JPA and PostgreSQL
+# Best for: Enterprise Java applications
 ```
 
 ---
 
-## Step 3 — Generate all the things
+## Step 3 — Execute the template
 
-Produce **every** file below that applies. Do not skip unless there's a good reason stated explicitly.
+Run the selected template with Copier:
 
-### 3a. README.md
+```bash
+# Basic usage
+copier copy <template-url> <destination-path>
 
-Structure:
-```markdown
-# Project Name
-> One-liner tagline
+# With specific answers (non-interactive)
+copier copy <template-url> <destination-path> \
+  --data project_name="My Project" \
+  --data author_name="User Name" \
+  --data license="MIT"
 
-## What it does
-[2–4 sentences, plain language]
-
-## Quick start
-[Minimal steps to go from zero to running — under 10 lines]
-
-## Architecture
-[Short prose + link to docs/architecture.md]
-
-## Configuration
-[.env vars table: name | required | default | description]
-
-## Development
-[How to install deps, run tests, lint]
-
-## Deployment
-[How to build and ship]
-
-## Contributing
-[One-liner pointing to CONTRIBUTING.md]
-
-## License
+# Use defaults for all questions
+copier copy <template-url> <destination-path> --defaults
 ```
 
-Keep it honest. Don't pad it.
+### Common Copier Options
 
-### 3b. Architecture doc (`docs/architecture.md`)
+- `--vcs-ref <tag>` — Use specific template version
+- `--answers-file <file>` — Load answers from YAML file
+- `--overwrite` — Overwrite existing files
+- `--skip <pattern>` — Skip files matching pattern
+- `--data key=value` — Pass template variables
+- `--defaults` — Use default values for all questions
 
-Structure:
+---
+
+## Step 4 — Post-generation enhancements
+
+After Copier generates the project, enhance with these additions if missing:
+
+### 4a. Architecture Documentation
+
+If `docs/architecture.md` doesn't exist, create it:
+
 ```markdown
 # Architecture
 
@@ -162,194 +253,199 @@ Structure:
 ## Components
 [Each major component: what it is, what it does, how it talks to others]
 
-## Data flow
+## Data Flow
 [Prose walk-through of the main request/event/data path]
 
-## Key decisions
+## Key Decisions
 [ADR-lite: What, Why, Trade-offs — for 2–4 important choices]
 
-## External dependencies
-[List with: name | purpose | docs link]
+## External Dependencies
+| Dependency | Purpose | Documentation |
+|------------|---------|---------------|
+| ... | ... | ... |
 ```
 
-### 3c. Diagrams
+### 4b. Mermaid Diagrams
 
-Produce **Mermaid** diagrams as `.mermaid` files in `docs/diagrams/`. Always produce at minimum:
+Create `docs/diagrams/` with at minimum:
 
-1. **System overview** — the major boxes and their relationships
-2. **Data / request flow** — sequence or flowchart of the primary happy path
-
-Additional diagrams as needed:
-- **ER diagram** if there's a database
-- **State machine** if there's a workflow with states
-- **Deployment diagram** if there's infra complexity
-
-Example system overview:
+**System Overview** (`system-overview.mermaid`):
 ```mermaid
 graph TB
-    Client -->|HTTPS| API[API Gateway]
-    API --> Auth[Auth Service]
-    API --> App[App Server]
-    App --> DB[(Postgres)]
-    App --> Cache[(Redis)]
-    App --> Queue[Job Queue]
-    Queue --> Worker[Background Worker]
+    Client[Client/User]
+    API[API Server]
+    DB[(Database)]
+    Cache[(Cache)]
+    
+    Client -->|HTTPS| API
+    API --> DB
+    API --> Cache
 ```
 
-Example sequence:
+**Data Flow** (`data-flow.mermaid`):
 ```mermaid
 sequenceDiagram
     participant U as User
     participant A as API
     participant DB as Database
+    
     U->>A: POST /api/resource
     A->>DB: INSERT record
     DB-->>A: record_id
     A-->>U: 201 Created
 ```
 
-### 3d. CI/CD (`.github/workflows/ci.yml`)
+### 4c. Enhance README
 
-At minimum: install → lint → test → build. Match to the stack.
+Ensure README includes:
+- **Quick start** (under 10 lines to run)
+- **Configuration table** (.env variables)
+- **Development instructions** (install, test, lint)
+- **Deployment guide**
+- **Link to architecture docs**
 
-Python example:
-```yaml
-name: CI
-on: [push, pull_request]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: '3.12' }
-      - run: pip install -e ".[dev]"
-      - run: ruff check .
-      - run: pytest --cov
-```
+### 4d. Verify CI/CD
 
-### 3e. `.env.example`
+Check `.github/workflows/` or equivalent includes:
+- Linting
+- Testing
+- Build verification
+- Optional: deployment pipeline
 
-Every env var the project uses, with placeholder values and a comment:
-```
-# Database
-DATABASE_URL=postgres://user:pass@localhost:5432/dbname
+---
 
-# Auth
-JWT_SECRET=change-me-in-production
-JWT_EXPIRY_HOURS=24
+## Step 5 — Document template updates
 
-# External APIs
-OPENAI_API_KEY=sk-...
-```
-
-### 3f. `.gitignore`
-
-Full, stack-appropriate gitignore. Use established templates (Python, Node, Go, etc.) and append project-specific additions.
-
-### 3g. `CONTRIBUTING.md`
+Add to project README:
 
 ```markdown
-# Contributing
+## Template Updates
 
-## Setup
-[Steps to get a dev environment running]
+This project was generated from [template-name](template-url).
 
-## Branching
-- `main` — production
-- Feature branches: `feat/short-description`
-- Bug fixes: `fix/short-description`
+To receive template updates:
+\`\`\`bash
+cd <project-directory>
+copier update
+\`\`\`
 
-## Commit style
-[Conventional commits or whatever the project uses]
-
-## Pull requests
-[What to include, who to tag, review SLA]
-
-## Running tests
-[Command(s)]
-```
-
-### 3h. `Dockerfile` (if applicable)
-
-Multi-stage, minimal, non-root user:
-```dockerfile
-FROM python:3.12-slim AS builder
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-FROM python:3.12-slim
-WORKDIR /app
-COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
-COPY src/ ./src/
-RUN useradd -m appuser && chown -R appuser /app
-USER appuser
-CMD ["python", "-m", "src.main"]
-```
-
-### 3i. `Makefile` (optional but highly recommended)
-
-Wrap common dev commands:
-```makefile
-.PHONY: install test lint build run clean
-
-install:
-	pip install -e ".[dev]"
-
-test:
-	pytest
-
-lint:
-	ruff check . && mypy src/
-
-build:
-	docker build -t project-name .
-
-run:
-	uvicorn src.main:app --reload
-
-clean:
-	find . -type d -name __pycache__ -exec rm -rf {} +
+Review changes carefully before committing.
 ```
 
 ---
 
-## Step 4 — Deliver the output
+## Step 6 — Deliver the output
 
-### If using computer tools (bash / file creation):
-1. Create all files under `/home/<your-ai-agent>/<project-name>/`
-2. Run a quick sanity check (e.g., `find . -type f | head -30`) to confirm structure
-3. Copy to `/mnt/user-data/outputs/<project-name>/`
-4. Call `present_files` on the most important files: README, architecture doc, main diagram
-5. Give a brief summary of what was generated — one line per major file
+### Execution Summary
 
-### If writing to chat only (no file tools):
-- Output each file in a clearly labelled code block
-- Use the order: README → architecture → diagrams → CI → supporting files
-- End with a tree view of the full structure
+Provide the user with:
+
+```markdown
+## ✅ Generated Repository: <project-name>
+
+**Template**: <template-url>
+**Location**: <output-path>
+
+### Structure
+<tree output or key directories>
+
+### Key Files
+- README.md — Quick start and configuration
+- docs/architecture.md — System design (added)
+- docs/diagrams/ — Mermaid diagrams (added)
+- .github/workflows/ — CI/CD pipelines
+- .env.example — Configuration template
+
+### Next Steps
+1. Install dependencies: <command>
+2. Run tests: <command>
+3. Start development: <command>
+
+### Template Updates
+\`\`\`bash
+cd <project-name>
+copier update
+\`\`\`
+```
 
 ---
 
-## Step 5 — What NOT to generate
+## Template Selection Guide
 
-Skip unless asked or clearly needed:
-- **Tests** — scaffold the folder and a sample test; writing all tests is a separate task
-- **Full business logic** — stub it with TODOs; the user asked for repo structure, not implementation
-- **Kubernetes manifests / Terraform** — offer to add them, don't include by default
-- **CHANGELOG.md** — create it empty with the format header only
+Quick reference for choosing templates:
+
+| User Request | Template | Command |
+|--------------|----------|---------|
+| Python API | pawamoy/copier-pdm | `copier copy gh:pawamoy/copier-pdm` |
+| Python library | pawamoy/copier-poetry | `copier copy gh:pawamoy/copier-poetry` |
+| Django app | cookiecutter-django | `copier copy gh:cookiecutter/cookiecutter-django` |
+| Data science | cookiecutter-data-science | `copier copy gh:drivendataorg/cookiecutter-data-science` |
+| Next.js app | create-next-app | `npx create-next-app@latest --typescript` |
+| Express API | node-express-boilerplate | `copier copy gh:hagopj13/node-express-boilerplate` |
+| Go service | cookiecutter-golang | `copier copy gh:lacion/cookiecutter-golang` |
+| Go CLI | cobra-cli | `copier copy gh:spf13/cobra-cli` |
+| Rust CLI | rust-cli/cli-template | `cargo generate --git https://github.com/rust-cli/cli-template` |
 
 ---
 
-## Quality bar
+## Quality Checklist
 
-Every repo scaffold should pass this mental checklist:
+Every scaffolded repo should pass:
 
-- [ ] A new developer can clone and run this in under 5 minutes following the README
-- [ ] The architecture doc explains *why*, not just *what*
-- [ ] At least 2 Mermaid diagrams exist and are accurate
-- [ ] No secrets or hardcoded credentials anywhere
-- [ ] CI runs on every push
-- [ ] .env.example covers every variable the app uses
-- [ ] .gitignore is complete for the stack
-- [ ] The folder structure would make a senior engineer nod, not wince
+- [ ] Clone and run in under 5 minutes
+- [ ] README has quick start and config table
+- [ ] Architecture documentation exists
+- [ ] At least 2 Mermaid diagrams (system, data flow)
+- [ ] CI/CD runs on every push
+- [ ] .env.example covers all variables
+- [ ] .gitignore is complete
+- [ ] No secrets or hardcoded credentials
+- [ ] Template update instructions documented
+- [ ] Follows language/framework conventions
+
+---
+
+## Troubleshooting
+
+### Copier Not Found
+```bash
+pipx install copier
+which copier
+copier --version
+```
+
+### Template Not Found
+```bash
+# Use full GitHub URL
+copier copy https://github.com/org/template.git output/
+
+# Or GitHub shorthand
+copier copy gh:org/template output/
+```
+
+### Permission Errors
+```bash
+mkdir -p /path/to/output
+chmod 755 /path/to/output
+```
+
+### Template Version Issues
+```bash
+# Use specific version
+copier copy gh:org/template --vcs-ref v1.2.3 output/
+
+# List available versions
+git ls-remote --tags https://github.com/org/template.git
+```
+
+---
+
+## Summary
+
+This skill orchestrates production-ready repository generation:
+
+- ✅ Leverage battle-tested community templates
+- ✅ Generate projects in seconds, not minutes
+- ✅ Enable template updates for long-term maintenance
+- ✅ Maintain consistency across projects
+- ✅ Focus on customization, not boilerplate generation
