@@ -1,145 +1,97 @@
-# Repo Scaffold Skill for Bob Shell
+# repo-scaffold
 
-A Bob Shell skill that generates production-ready repositories using **Copier** and community templates.
+A Bob Shell skill for generating production-ready repositories using Copier and community templates.
 
-## Overview
+## Installation
 
-This skill orchestrates repository scaffolding by:
-
-- Selecting appropriate community templates for your project type
-- Executing Copier with optimal configuration
-- Enhancing output with architecture documentation and diagrams
-- Delivering complete, runnable projects in seconds
-
-## Prerequisites
-
-Copier must be installed:
-
+1. Clone this repository to your Bob Shell skills directory:
 ```bash
-# Recommended: pipx (isolated)
+git clone <repo-url> ~/.bob/skills/repo-scaffold
+```
+
+2. Ensure Copier is installed:
+```bash
 pipx install copier
-
-# Alternative: uv
-uv tool install copier
-
-# Verify
-copier --version  # Should show v9.14.3 or later
 ```
 
-## Example Usage in Bob Shell
+3. Restart Bob Shell or reload skills
 
-### Trigger Phrases
+## What This Skill Does
 
-- "Build me a Python API"
-- "Create a production-ready Node service"
-- "Set up a Go CLI tool with proper structure"
-- "Make this into a proper repo with CI/CD"
-- "Scaffold a Django application"
+When triggered, this skill:
 
-### Execution Flow
+1. Analyzes the user's project requirements
+2. Selects the most appropriate community template (Python, Node, Go, Rust, etc.)
+3. Executes Copier to generate the base project structure
+4. Enhances the output with architecture documentation and Mermaid diagrams
+5. Delivers a complete, runnable repository
 
-```bash
-# User: "Build me a FastAPI service"
+## Trigger Conditions
 
-# Bob executes:
-copier copy gh:pawamoy/copier-pdm my-api
+This skill activates when users request:
+- "Build me a [language] API"
+- "Create a production-ready [framework] service"
+- "Set up a [type] tool with proper structure"
+- "Make this into a proper repo"
+- "Scaffold a [framework] application"
 
-# Then enhances with:
-# - docs/architecture.md
-# - docs/diagrams/system-overview.mermaid
-# - docs/diagrams/data-flow.mermaid
+See `repo-scaffold.skill` for the complete trigger description.
 
-# Result: Production-ready repo in seconds
-```
-
-## Curated Template Registry
-
-The skill uses these community templates:
+## Supported Templates
 
 ### Python
-- **pawamoy/copier-pdm** — Modern Python API (PDM, Ruff, pytest)
-- **pawamoy/copier-poetry** — Python packages (Poetry, publishing)
-- **cookiecutter/cookiecutter-django** — Django apps (Docker, PostgreSQL)
-- **drivendataorg/cookiecutter-data-science** — Data science projects
+- FastAPI/API services (pawamoy/copier-pdm)
+- Python libraries (pawamoy/copier-poetry)
+- Django applications (cookiecutter-django)
+- Data science projects (cookiecutter-data-science)
 
 ### Node/TypeScript
-- **create-next-app** — Next.js applications
-- **hagopj13/node-express-boilerplate** — Express APIs
-- **stegano/typescript-library-template** — TypeScript libraries
+- Next.js applications (create-next-app)
+- Express APIs (node-express-boilerplate)
+- TypeScript libraries (typescript-library-template)
 
 ### Go
-- **lacion/cookiecutter-golang** — Go services
-- **spf13/cobra-cli** — CLI tools
+- Go services (cookiecutter-golang)
+- CLI tools (cobra-cli)
 
 ### Rust
-- **rust-cli/cli-template** — Rust CLI apps
+- Rust CLI applications (rust-cli/cli-template)
 
-## What Gets Generated
+See `SKILL.md` for the complete template registry and selection logic.
 
-Every scaffolded project includes:
+## Files
 
-✅ Complete package structure  
-✅ README with quick start  
-✅ Architecture documentation (added by skill)  
-✅ Mermaid diagrams (added by skill)  
-✅ CI/CD pipeline (GitHub Actions)  
-✅ Docker configuration  
-✅ Testing setup  
-✅ Linting and type checking  
-✅ .env.example  
-✅ .gitignore  
+- `SKILL.md` - Main skill implementation and logic
+- `repo-scaffold.skill` - Skill metadata and trigger conditions
+- `README.md` - This file
+- `LICENSE` - MIT License
 
-## Template Updates
+## Requirements
 
-Projects can receive updates when templates evolve:
+- Bob Shell 1.0.0+
+- Copier 9.14.3+
+- Git
 
-```bash
-# Update project when template evolves
-cd my-project
-copier update
+## Development
 
-# Update to specific version
-copier update --vcs-ref v2.0.0
-```
+To modify this skill:
 
-## Skill Architecture
-
-```
-repo-scaffold/
-├── SKILL.md              # Main skill logic (template selection, execution)
-├── README.md             # This file
-├── LICENSE
-└── repo-scaffold.skill   # Skill metadata
-```
+1. Edit `SKILL.md` for logic changes
+2. Edit `repo-scaffold.skill` for trigger condition changes
+3. Test with Bob Shell in a clean directory
+4. Verify generated projects meet quality standards
 
 ## Quality Standards
 
-Every generated repo:
-
-- [ ] Clone and run in under 5 minutes
-- [ ] Clear README with quick start
-- [ ] Architecture documentation
-- [ ] At least 2 Mermaid diagrams
-- [ ] CI/CD on every push
-- [ ] Complete .env.example
-- [ ] Proper .gitignore
-- [ ] No hardcoded secrets
-- [ ] Template update instructions
-
-## Contributing
-
-To improve this skill:
-
-1. Add new community templates to `SKILL.md`
-2. Improve template selection logic
-3. Enhance post-generation customizations
-4. Update documentation
-
-## Credits
-
-- **Copier** — https://github.com/copier-org/copier
-- **Cookiecutter** — https://github.com/cookiecutter/cookiecutter
-- Community template authors
+Generated repositories must include:
+- Complete package structure
+- README with quick start
+- Architecture documentation
+- Mermaid diagrams
+- CI/CD configuration
+- Testing setup
+- .env.example
+- Proper .gitignore
 
 ## License
 
